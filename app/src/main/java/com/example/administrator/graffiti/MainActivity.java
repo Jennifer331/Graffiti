@@ -1,15 +1,21 @@
 package com.example.administrator.graffiti;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.StateListDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.view.View;
+import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
+import android.widget.Toast;
 
 /**
  * Created by Lei Xiaoyue on 2015-12-15.
@@ -19,6 +25,7 @@ public class MainActivity extends Activity {
     private GraffitiView mView;
     private SeekBar mSeekBar;
     private RadioGroup mRadioGroup;
+    private Button mChoosePicBtn, mSaveBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +36,7 @@ public class MainActivity extends Activity {
     }
 
     private void registerWidget() {
-        mView = (GraffitiView)findViewById(R.id.canvas);
+        mView = (GraffitiView) findViewById(R.id.canvas);
         mSeekBar = (SeekBar) findViewById(R.id.seekbar);
         mSeekBar.setMax(Config.MAX_STROKE_WIDTH);
         mRadioGroup = (RadioGroup) findViewById(R.id.colorPicker);
@@ -55,8 +62,6 @@ public class MainActivity extends Activity {
             StateListDrawable drawable = new StateListDrawable();
             drawable.addState(new int[]{android.R.attr.state_pressed},
                     new BitmapDrawable(this.getResources(), focusBitmap));
-            drawable.addState(new int[]{android.R.attr.state_focused, android.R.attr.state_enabled},
-                    new BitmapDrawable(this.getResources(), focusBitmap));
             drawable.addState(new int[]{android.R.attr.state_checked},
                     new BitmapDrawable(this.getResources(), focusBitmap));
             drawable.addState(new int[]{},
@@ -66,9 +71,11 @@ public class MainActivity extends Activity {
             button.setFocusable(true);
             mRadioGroup.addView(button, i);
         }
+        mChoosePicBtn = (Button) findViewById(R.id.choosePics);
+        mSaveBtn = (Button) findViewById(R.id.save);
     }
 
-    private void initListener(){
+    private void initListener() {
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -93,12 +100,38 @@ public class MainActivity extends Activity {
             }
         });
         mSeekBar.setProgress(Config.DEFAULT_STROKE_WIDTH);
+        mChoosePicBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(intent, Config.PIC_REQUEST_CODE);
+            }
+        });
+        mSaveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bitmap bitmap = mView.getResult();
+                MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, System.currentTimeMillis() + ".jpg", "");
+                Toast.makeText(getApplicationContext(),"已保存",Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
     public void onBackPressed() {
-        if(!mView.undo()) {
+        if (!mView.undo()) {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (RESULT_OK == resultCode && Config.PIC_REQUEST_CODE == requestCode) {
+            Uri uri = data.getData();
+            mView.setSrc(uri);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

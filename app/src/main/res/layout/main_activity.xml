@@ -9,7 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="8"
-        android:background="@color/canvasBg" />
+        android:background="@color/canvasBg"
+        android:scaleType="fitCenter"
+        android:src="@drawable/koala" />
 
     <SeekBar
         android:id="@+id/seekbar"
@@ -23,8 +25,34 @@
         android:id="@+id/colorPicker"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3"
+        android:layout_weight="2"
+        android:gravity="center"
         android:orientation="horizontal"
-        android:scrollbars="vertical"
-        android:gravity="center"/>
+        android:scrollbars="vertical" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@color/colorPickerBg"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/choosePics"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="30dp"
+            android:padding="10dp"
+            android:text="@string/choose_pics"
+            android:textSize="@dimen/button_text_size" />
+
+        <Button
+            android:id="@+id/save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="@string/save"
+            android:textSize="@dimen/button_text_size" />
+    </LinearLayout>
 </LinearLayout>
