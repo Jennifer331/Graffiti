@@ -3,15 +3,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
-    <com.example.administrator.graffiti.GraffitiView
-        android:id="@+id/canvas"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="8"
-        android:background="@color/canvasBg"
-        android:scaleType="fitCenter"
-        android:src="@drawable/koala" />
+        android:background="@color/canvasBg">
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitCenter"
+            android:src="@drawable/koala"/>
+        <com.example.administrator.graffiti.GraffitiView
+            android:id="@+id/graffiti"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </FrameLayout>
 
     <SeekBar
         android:id="@+id/seekbar"

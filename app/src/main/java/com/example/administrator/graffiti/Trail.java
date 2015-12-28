@@ -9,6 +9,7 @@ import android.graphics.Path;
 public class Trail {
     public Path path;
     public Paint paint;
+    public boolean valid = false;//if there isn't any point in the path is in the destination area ,this field will be set to false
     public Trail(Path path,Paint paint){
         this.path = new Path(path);
         this.paint = new Paint(paint);
